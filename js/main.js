@@ -1,5 +1,5 @@
  $(document).ready(function () {
-  $('#get-data').click(function () {
+
     var showData = $('#show-data');
 
     $.getJSON('data/Project.json', function (data) {
@@ -16,8 +16,9 @@
         var list = $('<ul />').html(content);
         showData.append(list);
       }
-    });
 
-    showData.text('Loading the JSON file.');
+
   });
+  
+  
 });
