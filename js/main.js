@@ -28,7 +28,7 @@ function GenerateContent(){
          console.log(data);
 
          var items = data.items.map(function(item) {
-             console.log(item.key+'||'+item.value);
+             console.log(item.key+'||'+item.value+'||'+item.url);
              return item.key + ': ' + item.value;
          });
 
