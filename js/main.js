@@ -19,7 +19,7 @@ function GenerateContent(){
              $('#Contentdata').html(content);
          }
      });
-     //draw Table
+     //draw Table 
      $('#wechattable').DataTable();
  
 }
