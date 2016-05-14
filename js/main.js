@@ -36,7 +36,7 @@ function GenerateContent(){
          if (items.length) {
           //show data  Contentdata
              var content = tableheader+ items.join('')+'</tbody></table>';
-             $('#show-data').append(content);
+             $('#Contentdata').append(content);
              //var list = $('<ul />').html(content);
             // showData.append(list);
          }
