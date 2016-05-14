@@ -20,7 +20,9 @@ function GenerateContent(){
              $('#wechattable').DataTable({
                  "searching": false,
                    "bInfo": false,
-                   "info": false
+                   "info": false,
+                    "bLengthChange": true,
+                    "bSort" : false
              });
          }
      });
