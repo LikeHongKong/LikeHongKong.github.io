@@ -21,8 +21,9 @@ function GenerateContent(){
                  "searching": false,
                    "bInfo": false,
                    "info": false,
-                    "lengthChange": true,
-                    "bSort" : false
+                    "bSort" : false,
+                    'iDisplayLength': 5,
+                     'bLengthChange': false
              });
          }
      });
