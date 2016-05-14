@@ -8,9 +8,10 @@ function GenerateContent(){
          //console.log(data);
 
          var items = data.items.map(function(item) {//console.log(item.Time+'||'+item.Name+'||'+item.url);
+         console.log(item.Time);
              return '<tr><td>'+'<a href='+item.url+'>'+item.Name+'</a>'+'</td></tr>';
          });
-         var tableheader='<table id="wechat-table" class="table table-striped table-bordered" cellspacing="0" width="100%"><thead> <tr> <th>LikeHK 精彩文章</th>  </thead><tbody>'
+         var tableheader='<table id="wechattable" class="table table-striped table-bordered" cellspacing="0" width="100%"><thead> <tr> <th>LikeHK 精彩文章</th>  </thead><tbody>'
          //showData.empty();
          if (items.length) {
           //show data  Contentdata
@@ -19,6 +20,6 @@ function GenerateContent(){
          }
      });
      //draw Table
-     $('#wechat-table').DataTable();
+     $('#wechattable').DataTable();
  
 }
