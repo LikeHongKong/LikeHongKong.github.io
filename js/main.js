@@ -21,7 +21,7 @@ function GenerateContent(){
                  "searching": false,
                    "bInfo": false,
                    "info": false,
-                    "bLengthChange": true,
+                    "lengthChange": true,
                     "bSort" : false
              });
          }
