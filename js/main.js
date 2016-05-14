@@ -17,7 +17,11 @@ function GenerateContent(){
           //show data  Contentdata
              var content = tableheader+ items.join('')+'</tbody></table>';
              $('#Contentdata').html(content);
-             $('#wechattable').DataTable();
+             $('#wechattable').DataTable({
+                 "searching": false,
+                   "bInfo": false,
+                   "info": false
+             });
          }
      });
      //draw Table 
