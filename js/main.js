@@ -25,17 +25,18 @@
 
 function GenerateContent(){
   $.getJSON('data/Project.json', function(data) {
-         console.log(data);
+         //console.log(data);
 
          var items = data.items.map(function(item) {
-             console.log(item.key+'||'+item.value+'||'+item.url);
-             return item.key + ': ' + item.value;
+             console.log(item.Time+'||'+item.Name+'||'+item.url);
+             return '<tr><td>'+'<a href='+item.url+'>'+item.Name+'</a>'+'</td></tr>';
          });
-
+         var tableheader='<table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%"><thead> <tr> <th>Name</th>  </thead><tbody>'
          //showData.empty();
          if (items.length) {
-          //show data
-             //var content = '<li>' + items.join('</li><li>') + '</li>';
+          //show data  Contentdata
+             var content = tableheader+ items.join('')+'</tbody></table>';
+             $('#show-data').append(content);
              //var list = $('<ul />').html(content);
             // showData.append(list);
          }
