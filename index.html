@@ -1,130 +1,80 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>ForceTK Demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
+    <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="js/forcetk.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript">
+        // OAuth Configuration
+        var loginUrl    = 'https://login.salesforce.com/';
+        var clientId    = '3MVG9Km_cBLhsuPzTtcGHsZpj9HSp.uUwbHupEXhWi6k3JJphEv8swpsUYIFCZSLp8pi7YYMbRjeQUxptYdIt';
+        var redirectUri = 'https://login.salesforce.com/services/oauth2/success';
 
-<head>
-    <meta charset="utf-8">
-    <title>Like Hong Kong</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="css/main.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    
-    
-    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
-    
-    
-    
-    
-    
-    <script src="js/main.js"></script>
-    
-</head>
+        var client = new forcetk.Client(clientId, loginUrl);
 
-<body>
-    <div class="container">
-        <div class="header clearfix" style="padding-left:2px;padding-right:2px">
-            <nav>
-                <ul class="nav nav-pills pull-right">
-                    <li role="presentation" class="active"><a href="#">Home</a></li>
-                    <li role="presentation"><a href="http://1.likehongkong.sinaapp.com">LikeHK</a></li>
-                    <li role="presentation"><a href="http://mp.weixin.qq.com/s?__biz=MzAwNjA1NTE4Nw==&mid=218263502&idx=5&sn=3d1d14ade819a98006a1443ddf207fc6#rd">我们</a></li>
-                </ul>
-            </nav>
-            <h3 class="text-muted"><img src="https://raw.githubusercontent.com/LikeHongKong/LikeHongKong.github.io/master/img/Logo_LikeHK.gif"  alt="logo"  height="45em" width="100em" /></h3>
-        </div>
+        // Make our own startsWith utility fn
+        if (!String.prototype.startsWith) {
+          String.prototype.startsWith = function(searchString, position) {
+            position = position || 0;
+            return this.lastIndexOf(searchString, position) === position;
+          };
+        }
 
-        <div class="row">
-            <div class="col-md-3">
-                <div id="demo" class="collapse in">
-                    <hr>
-                    <div class="list-group list-group">
-                        <h4 class="">新游戏</h4>
-                        <a href="#" class="list-group-item"><span class="badge">14</span> Active item <span class="label label-primary">New</span></a>
-                        <a href="#" class="list-group-item"><span class="badge">3</span> Second item</a>
-                        <a href="#" class="list-group-item"><span class="badge">25</span> Third item</a>
-                        <a href="#" class="list-group-item"><span class="badge">14</span> Active item</a>
-                        <a href="#" class="list-group-item"><span class="badge">3</span> Second item</a>
-                        <a href="#" class="list-group-item"><span class="badge">25</span> Third item</a>
-                        <a href="#" class="list-group-item"><span class="badge">14</span> Active item</a>
-                        <a href="#" class="list-group-item"><span class="badge">3</span> Second item</a>
+        document.addEventListener("deviceready", function(){
+            $('#login').click(function(e) {
+                e.preventDefault();
+                var ref = window.open(getAuthorizeUrl(loginUrl, clientId, redirectUri), 
+                                      '_blank', 'location=no,toolbar=no');
+                ref.addEventListener('loadstop', function(evt) {
+                    if (evt.url.startsWith(redirectUri)) {
+                        ref.close();
+                        sessionCallback(unescape(evt.url));
+                    }
+                });
+            });
+        });
 
-                        <div id="categories" class="collapse">
+        function getAuthorizeUrl(loginUrl, clientId, redirectUri){
+            return loginUrl+'services/oauth2/authorize?display=touch'
+                +'&response_type=token&client_id='+escape(clientId)
+                +'&redirect_uri='+escape(redirectUri);
+        }
 
-                            <a href="#" class="list-group-item"><span class="badge">14</span> Active item</a>
-                            <a href="#" class="list-group-item"><span class="badge">3</span> Second item</a>
-                            <a href="#" class="list-group-item"><span class="badge">25</span> Third item</a>
-                            <a href="#" class="list-group-item"><span class="badge">14</span> Active item</a>
-                            <a href="#" class="list-group-item"><span class="badge">3</span> Second item</a>
-                        </div>
+        function sessionCallback(loc) {
+            var oauthResponse = {};
 
+            var fragment = loc.split("#")[1];
 
-                        <button class="btn btn-default btn-sm btn-block" data-toggle="collapse" data-target="#categories">More <span class="caret"></span></button>
+            if (fragment) {
+                var nvps = fragment.split('&');
+                for (var nvp in nvps) {
+                    var parts = nvps[nvp].split('=');
+                    oauthResponse[parts[0]] = unescape(parts[1]);
+                }
+            }
 
-                        <hr class="">
-                        <h4 class="">Viewing Options</h4>
-                        <a href="#" class="list-group-item"><span class="badge">14</span> Upcoming Sessions</a>
+            if (typeof oauthResponse === 'undefined'
+                || typeof oauthResponse['access_token'] === 'undefined') {
+                alert("Unauthorized: No OAuth response");
+            } else {
+                client.setSessionToken(oauthResponse.access_token, null,
+                    oauthResponse.instance_url);
 
-                        <a href="#" class="list-group-item"><span class="badge">3</span> OnDemand</a>
-
-
-                    </div>
-                </div>
-                <div class="hidden-sm hidden-xs">
-
-                    <hr>
-
-                    <div class="well">
-
-                        <h4>Premium Membership</h4>
-                        <p>Gain unlimited access to our entire course library.</p>
-                        <button class="btn btn-sm btn-warning">Learn more</button>
-
-                        <hr>
-                        <p class="text-center ">Already a member? <a href="#">Sign in.</a></p>
-                    </div>
-
-
-                    <hr>
-
-                    <div class="well">
-
-                        <h4>Course Catalog</h4>
-                        <p>
-                            <a href="#"><img src="http://placehold.it/400X500" class="img-responsive"></a>
-                        </p>
-
-                        <p>Everything you need to know about our webinars, including speaker bios, topics, and courses.</p>
-
-                        <button class="btn btn-sm btn-block btn-warning">Download</button>
-                    </div>
-
-                    <hr>
-
-                    <h4 class="text-center">CPE Partners</h4>
-
-                    <p>
-                        <a href="#"><img class="center-block" src="http://placehold.it/100X100"></a>
-                    </p>
-
-
-
-                </div>
-            </div>
-
-            <div class="col-md-9">
-                <div id="Contentdata"></div>
-            </div>
-        </div>
-
-    </div>
-    
-    
-
-
-</body>
-
+                client.query("SELECT Name FROM Account LIMIT 1", 
+                    function(response){
+                        $('#message').text('The first account I see is '
+                        +response.records[0].Name);
+                    }
+                );
+            }
+        }
+    </script>
+  <head>
+  <body>
+    <button id="login">Click here to login</button>
+    <p id="message"></p>
+  </body>
 </html>
