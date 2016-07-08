@@ -4,8 +4,8 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/jsforce/1.6.3/jsforce.min.js"></script>
   <script>
 jsforce.browser.init({
-  clientId: '[ 	3MVG9MHOv_bskkhTbcpwNojvxOS.I1etdoehrB063cFNxE6hyjgic0kNHFI.kLaJdQEYn5ZuoKBwtvmT2xzgH ]',
-  redirectUri: '[ http://tonynodejs-renhk.rhcloud.com/SFDC_Back.html]'
+  clientId: '3MVG9MHOv_bskkhTbcpwNojvxOS.I1etdoehrB063cFNxE6hyjgic0kNHFI.kLaJdQEYn5ZuoKBwtvmT2xzgH',
+  redirectUri: 'http://tonynodejs-renhk.rhcloud.com/SFDC_Back.html]'
 });
 jsforce.browser.on('connect', function(conn) {
   conn.query('SELECT Id, Name FROM Account', function(err, res) {
@@ -19,4 +19,3 @@ jsforce.browser.on('connect', function(conn) {
   <button onclick="javascript:jsforce.browser.login();">Login</button>
 </body>
 </html>
-
