@@ -1,84 +1,21 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>ForceTK Demo</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;" />
-    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
-    <script src="https://cdn.rawgit.com/LikeHongKong/Force.com-JavaScript-REST-Toolkit/master/forcetk.js"></script>
-    <script src="https://cdn.rawgit.com/LikeHongKong/cordova-js/master/src/cordova.js"></script>
-    
-    
-    
-    <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript">
-        // OAuth Configuration
-        var loginUrl    = 'https://test.salesforce.com/';
-        var clientId    = '3MVG9Km_cBLhsuPzTtcGHsZpj9HSp.uUwbHupEXhWi6k3JJphEv8swpsUYIFCZSLp8pi7YYMbRjeQUxptYdIt';
-        var redirectUri = 'https://test.salesforce.com/services/oauth2/success';
-
-        var client = new forcetk.Client(clientId, loginUrl);
- 
-        // Make our own startsWith utility fn
-        if (!String.prototype.startsWith) {
-          String.prototype.startsWith = function(searchString, position) {
-            position = position || 0;
-            return this.lastIndexOf(searchString, position) === position;
-          };
-        }
-
-        document.addEventListener("deviceready", function(){
-            $('#login').click(function(e) {
-                e.preventDefault();
-                var ref = window.open(getAuthorizeUrl(loginUrl, clientId, redirectUri), 
-                                      '_blank', 'location=no,toolbar=no');
-                ref.addEventListener('loadstop', function(evt) {
-                    if (evt.url.startsWith(redirectUri)) {
-                        ref.close();
-                        sessionCallback(unescape(evt.url));
-                    }
-                });
-            });
-        });
-
-        function getAuthorizeUrl(loginUrl, clientId, redirectUri){
-            return loginUrl+'services/oauth2/authorize?display=touch'
-                +'&response_type=token&client_id='+escape(clientId)
-                +'&redirect_uri='+escape(redirectUri);
-        }
-
-        function sessionCallback(loc) {
-            var oauthResponse = {};
-
-            var fragment = loc.split("#")[1];
-
-            if (fragment) {
-                var nvps = fragment.split('&');
-                for (var nvp in nvps) {
-                    var parts = nvps[nvp].split('=');
-                    oauthResponse[parts[0]] = unescape(parts[1]);
-                }
-            }
-
-            if (typeof oauthResponse === 'undefined'
-                || typeof oauthResponse['access_token'] === 'undefined') {
-                alert("Unauthorized: No OAuth response");
-            } else {
-                client.setSessionToken(oauthResponse.access_token, null,
-                    oauthResponse.instance_url);
-
-                client.query("SELECT Name FROM Account LIMIT 1", 
-                    function(response){
-                        $('#message').text('The first account I see is '
-                        +response.records[0].Name);
-                    }
-                );
-            }
-        }
-    </script>
-  <head>
-  <body>
-    <button id="login">Click here to login</button>
-    <p id="message"></p>
-  </body>
+<head>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jsforce/1.6.3/jsforce.min.js"></script>
+  <script>
+jsforce.browser.init({
+  clientId: '[ 	3MVG9MHOv_bskkhTbcpwNojvxOS.I1etdoehrB063cFNxE6hyjgic0kNHFI.kLaJdQEYn5ZuoKBwtvmT2xzgH ]',
+  redirectUri: '[ http://tonynodejs-renhk.rhcloud.com/SFDC_Back.html]'
+});
+jsforce.browser.on('connect', function(conn) {
+  conn.query('SELECT Id, Name FROM Account', function(err, res) {
+    if (err) { return console.error(err); }
+    console.log(res);
+  });
+});
+  </script>
+</head>
+<body>
+  <button onclick="javascript:jsforce.browser.login();">Login</button>
+</body>
 </html>
